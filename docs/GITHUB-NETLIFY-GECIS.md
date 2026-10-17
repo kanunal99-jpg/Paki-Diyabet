@@ -35,3 +35,21 @@ Bu oturumun Netlify bağlantısı proje ve dağıtım **okuma** yetenekleri sağ
 | Production | Smoke + geri alma doğrulaması | Bekliyor |
 
 **Resmi başvuru:** https://docs.netlify.com/build/git-workflows/repo-permissions-linking/
+
+## Yeni kurtarma yöntemi — Netlify arayüzünden kaynakları GitHub'a dışa aktarma
+
+Netlify'nin 2026 tarihli [Create a repo from Netlify](https://docs.netlify.com/build/git-workflows/create-a-repo-from-netlify/) özelliği, Git'e bağlı olmayan projeler için **Project configuration → Developer settings → Continuous deployment → Repository → Link to repository → Push to new repository** yolunu anlatır. Bu işlemde Netlify **yeni GitHub deposu oluşturur ve proje dosyalarını oraya iter**. 
+
+**Önemli:** Kullanıcının hedefi **mevcut** `kanunal99-jpg/Paki-Diyabet` deposu. Bu nedenle `Push to new repository` doğrudan hedef depoya taşıma değil, **geçici kurtarma kaynağı**dır. Netlify bu seçeneği mevcut proje için gösteriyor ve gerçekten orijinal `package.json`/lockfile/`app/page.tsx`/lib/db kaynaklarını aktarıyorsa, yeni depodaki kaynak GitHub üzerinden denetlenir, sonra bu mevcut depoyla güvenli bir PR ile birleştirilir. En son Netlify'nin repo bağlantısı mevcut `Paki-Diyabet` `main` dalına değiştirilir. Bu ara depoya hasta/veri/gizli anahtar girilmemelidir.
+
+Bu seçeneğin kullanıcı hesabında kullanılabilirliği, proje dosyalarının tamlığı ve sonucu **bu oturumda doğrulanmadı**. Netlify connector'ı arayüzde `Push to new repository` veya `Link repository` eylemini sunmuyor; bu zorunlu kullanıcı arayüzü adımı atlanamaz. Netlify'nin [mevcut siteyi repo ile bağlama](https://docs.netlify.com/build/git-workflows/repo-permissions-linking/) seçeneği de bu arayüz üzerinden yapılır.
+
+### Otomatik yayın kesin kabul testi
+
+- [ ] Bu depoda gerçek tam kaynak; `npm ci`, lint, typecheck, unit/integration, gerçek giriş/kayıt E2E ve `next build` geçti
+- [ ] PR merge öncesi required checks / code review aktif
+- [ ] Netlify'de **mevcut** `pakidiyabet` projesi `kanunal99-jpg/Paki-Diyabet` `main` dalına bağlı (ikinci canlı site yok)
+- [ ] Güvenli bir test commit'i main'e alındı ve Netlify'de **otomatik tetiklenen** deploy'da aynı commit SHA görüldü
+- [ ] Production smoke + gerçek yetkili kimlik doğrulama + kayıt/veri izolasyonu + rollback doğrulandı
+
+`netlify.toml` gerekli kaynaklar eksikken production derlemesini engeller; ayrıca artık lint/typecheck/unit testleri build'den **önce zorunlu** koşar. E2E GitHub required checks üzerinden ayrıca zorunludur.
