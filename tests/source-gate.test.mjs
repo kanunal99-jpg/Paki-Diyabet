@@ -8,6 +8,7 @@ import {spawnSync} from 'node:child_process';
 const verifier = resolve('scripts/verify-source.mjs');
 const requiredPaths = [
   'package-lock.json','tsconfig.json','app/page.tsx','db/raw.ts',
+  'netlify/database/migrations/001_initial-schema/migration.sql',
   'app/chatgpt-auth.ts','app/api/session/route.ts','app/session-reconciler.ts',
   'lib/backup.ts','lib/documents.ts','lib/health.ts','lib/journal.ts',
   'lib/return-path.ts','lib/server-journal.ts','lib/shares.ts'
