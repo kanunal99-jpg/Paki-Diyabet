@@ -20,13 +20,13 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+      - name: Verify complete original application source
+        run: node scripts/verify-source.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: package-lock.json
-      - name: Verify complete original application source
-        run: node scripts/verify-source.mjs
       - name: Require explicit quality scripts (never silently skip)
         run: |
           node -e "const p=require('./package.json');const required=['build','lint','typecheck','test','test:e2e'];const missing=required.filter(x=>!p.scripts?.[x]);if(missing.length){console.error('QUALITY_SCRIPTS_MISSING:',missing.join(','));process.exit(1)}"
