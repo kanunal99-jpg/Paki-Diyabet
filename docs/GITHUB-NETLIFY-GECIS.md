@@ -53,3 +53,21 @@ Bu seçeneğin kullanıcı hesabında kullanılabilirliği, proje dosyalarının
 - [ ] Production smoke + gerçek yetkili kimlik doğrulama + kayıt/veri izolasyonu + rollback doğrulandı
 
 `netlify.toml` gerekli kaynaklar eksikken production derlemesini engeller; ayrıca artık lint/typecheck/unit testleri build'den **önce zorunlu** koşar. E2E GitHub required checks üzerinden ayrıca zorunludur.
+
+## DURUM GÜNCELLEMESİ — otomatik yayın GERÇEKTEN çalışıyor (17 Ekim, 22:50 TRT)
+
+Bu belgenin ilk kısmı kurtarma öncesi yazılmıştır. Sonraki doğrulanmış durum:
+
+- Kaynak kod, Netlify'nin **Push to new repository** işlemiyle özel `kanunal99-jpg/Paki-Diyabet-Netlify-Kurtarma` GitHub deposuna aktarıldı: 291 özgün dosya, yaklaşık 115 MB.
+- Tam kaynak için GitHub Actions kalite doğrulaması: [run 39063750090](https://github.com/kanunal99-jpg/Paki-Diyabet-Netlify-Kurtarma/actions/runs/39063750090), pnpm frozen install, lint, TypeScript, Netlify/sistem testleri ve Next.js build **başarılı**. Test yalnızca `audit/full-source-build-20261017` dalında çalıştırıldı.
+- Netlify projesi özel kurtarma deposuna Git olarak bağlandı; production branch `main`.
+- `main` commit `9cfd17f451c92315e0d07880528533902b8ce102` otomatik Netlify deploy `6ad3d13033218a91b2fa6cc4` oluşturdu, production `ready`, 2026-10-17 19:50:51 UTC. İki tarafta commit SHA'sı **eşleşiyor**.
+- Yeniden çalıştırılmış salt-okunur smoke: [run 39057734192](https://github.com/kanunal99-jpg/Paki-Diyabet/actions/runs/39057734192), son deneme **32/32 başarılı**. Gerçek kullanıcı hesabı ile kayıt/giriş E2E **yapılmadı**.
+- **OTOMATİK NETLIFY YAYINI ARTIK VAR**, ancak şimdilik doğru ve eksiksiz kaynağa sahip özel **kurtarma deposundan** çalışıyor; istenen asıl `kanunal99-jpg/Paki-Diyabet` deposu henüz bağlanmadı.
+
+### Asıl depoya geçiş güvenliği
+
+- Asıl GitHub deposu şu anda `public`; tam ve doğru kaynak `private` kurtarma deposunda. Kaynağı sırf geçişi bitirmek için gizli/sahiplik denetimi olmadan herkese açık repoya aktarmayın.
+- Kurtarılan proje `pnpm@11.25.0`, `pnpm-lock.yaml`, `node >=22.13` (Netlify build ortamında Node 24) ve `pnpm run build` kullanıyor. Eski depodaki `npm ci` ve zorunlu `package-lock.json` varsayımları kaynakla **uyuşmuyor**.
+- Amaç: önce iki depodaki kod/gizlilik/lisans farklarını denetlemek; gerekiyorsa hedef depoyu kullanıcı tarafından private yapmak veya güvenli kaynakları seçerek transfer etmek; doğru pnpm build/test iş akışını PR üzerinde çalıştırmak; ancak sonra Netlify Git bağlantısını mevcut hedef `main` dalına taşımak.
+- **Çalışan özel depo bağlantısını erken kesmeyin.** İkinci site oluşturmayın, mevcut veritabanını veya Identity ayarlarını sıfırlamayın, üretimde sahte hasta/kayıt oluşturmayın.
