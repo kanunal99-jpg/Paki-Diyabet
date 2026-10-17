@@ -2,6 +2,9 @@ name: Production Read-Only Smoke
 
 on:
   workflow_dispatch:
+  schedule:
+    # 08:15 Europe/Istanbul (UTC+3 all year). Scheduled Actions may be delayed.
+    - cron: '15 5 * * *'
   push:
     branches: [main]
     paths:
@@ -10,6 +13,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: paki-live-smoke
+  cancel-in-progress: false
 
 jobs:
   live-smoke:
@@ -32,3 +39,4 @@ jobs:
           path: test-results/production-smoke.json
           if-no-files-found: warn
           retention-days: 14
+# Read-only checks don't verify actual signup/email delivery/password login.
