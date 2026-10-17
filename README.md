@@ -31,3 +31,9 @@ Ayrıntılı işlemler ve başarı ölçütleri: [GitHub → Netlify geçiş kı
 Dosya kitaplığına bağlı ayrı bir ChatGPT Sites projesi bulundu: [Paki Diyabet Rehberim](https://paki-diyabet-rehberim.kanunal99.chatgpt.site) (Sites kaynak sürümü 6). Kitaplık yüzeyinde yalnızca sitenin işlenmiş/görünür sayfa metni bulunuyor; **tam TS/TSX kaynak kodu sağlanmıyor**. Bu kaydın Netlify'de yayınlanan Next.js sürümüyle bire bir aynı proje olduğu ayrıca doğrulanmalıdır. Sites kaydı, Netlify kaynak ZIP'inin veya tam Next.js uygulamasının yerine kullanılamaz.
 
 Kısmi düzeltme ZIP'i için SHA-256 ve syntax denetimi: [kaynak kurtarma raporu](docs/KAYNAK-KURTARMA-DENETIMI-2026-10-17.md).
+
+## Kısmi kaynak kurtarma ve gerçek test ilerlemesi
+
+Doğrulanmış 17 Ekim kaynak ZIP'inden `app/`, `lib/`, `db/` yollarına **10 gerçek uygulama dosyası**, ayrıca `tests/production-smoke.mjs` aktarıldı. Bu bir **kısmi kurtarmadır**, tam uygulama veya build edilebilir Next.js projesi değildir. Açık eksikler için [kaynak kurtarma denetimi](docs/KAYNAK-KURTARMA-DENETIMI-2026-10-17.md) ve [Issue #1](https://github.com/kanunal99-jpg/Paki-Diyabet/issues/1) izlenir.
+
+**Canlı test kanıtı:** [GitHub Actions run 39056689315](https://github.com/kanunal99-jpg/Paki-Diyabet/actions/runs/39056689315) — **32/32 salt-okunur production smoke geçti.** Gerçek kayıt/giriş E2E ve GitHub→Netlify CD hâlâ bekliyor.
