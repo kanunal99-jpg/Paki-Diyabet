@@ -1,0 +1,5 @@
+# Applies ONLY after complete Next.js sources have been restored and reviewed.
+# Never treat this configuration alone as an enabled Git integration.
+[build]
+  command = "node scripts/verify-source.mjs && npm run build"
+  publish = ".next"
