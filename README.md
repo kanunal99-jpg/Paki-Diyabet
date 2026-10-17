@@ -25,3 +25,9 @@ Netlify'nin son doğrulanan üretim dağıtımı: `6ad3a9dfdba55222435b4c2d` (re
 Ayrıntılı işlemler ve başarı ölçütleri: [GitHub → Netlify geçiş kılavuzu](docs/GITHUB-NETLIFY-GECIS.md).
 
 > Asla gerçek hasta/sağlık verisi, parola, token veya gizli ortam değişkenini Git deposuna eklemeyin.
+
+## Sites kaynak bağlantısına dair ek bulgu (17 Ekim 2026)
+
+Dosya kitaplığına bağlı ayrı bir ChatGPT Sites projesi bulundu: [Paki Diyabet Rehberim](https://paki-diyabet-rehberim.kanunal99.chatgpt.site) (Sites kaynak sürümü 6). Kitaplık yüzeyinde yalnızca sitenin işlenmiş/görünür sayfa metni bulunuyor; **tam TS/TSX kaynak kodu sağlanmıyor**. Bu kaydın Netlify'de yayınlanan Next.js sürümüyle bire bir aynı proje olduğu ayrıca doğrulanmalıdır. Sites kaydı, Netlify kaynak ZIP'inin veya tam Next.js uygulamasının yerine kullanılamaz.
+
+Kısmi düzeltme ZIP'i için SHA-256 ve syntax denetimi: [kaynak kurtarma raporu](docs/KAYNAK-KURTARMA-DENETIMI-2026-10-17.md).
