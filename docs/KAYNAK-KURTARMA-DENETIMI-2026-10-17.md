@@ -60,3 +60,34 @@ Kısmi ZIP'deki `tests/production-smoke.mjs` dosyası depoya güvenli salt-okunu
 - Manifest, service worker, çevrimdışı sayfa, ikon ve Next.js CSS/JS dosyaları: HTTP 200.
 
 **Sınır:** Gerçek e-posta onayı, hesap oluşturma, kimlik sağlayıcıdan gerçek JWT edinme, kullanıcıya ait veri güncelleme ve veri kalıcılığı bu salt-okunur testte denenmedi. CI kaynak bütünlüğü/gerçek üretim build hâlâ eksik kaynak nedeniyle başarısız; Netlify'nin GitHub'a otomatik bağlı olduğunu bu smoke kanıtlamaz.
+
+## İkinci denetim — eksik modül bağımlılıkları ve CI düzeltmeleri
+
+Kaynak ZIP içindeki `app/`, `lib/` ve `db/` yollarına ait .ts/.tsx dosyaları üzerinden **128 yerel import** incelendi. **8 farklı modül yolu** ZIP içinde bulunamadı:
+
+1. `app/session-reconciler`
+2. `lib/backup`
+3. `lib/documents`
+4. `lib/health`
+5. `lib/journal`
+6. `lib/return-path`
+7. `lib/server-journal`
+8. `lib/shares`
+
+Bunların asıl kaynakta mevcut olup olmadığını anlamak için tam çalışma alanı gerekir. Eksikler, ZIP içindeki dosyaların silindiğinin veya canlı ortamda kodun hatalı çalıştığının kanıtı değildir. ZIP'in kısmi olduğunu gösterir.
+
+GitHub'a aktarılan 10 `app/`, `db/`, `lib/` dosyasının **Git blob SHA-1 değerleri kısmi ZIP'deki aynı dosyaların Git blob SHA-1 değerleriyle 10/10 birebir eşleşti**. Aktarımda bu 10 kaynak dosyasının bozulduğuna yönelik kanıt yok.
+
+### Düzeltilen CI kusurları
+
+- **Önceki kusur:** `npm run lint --if-present`, `npm run typecheck --if-present` ve `npm test --if-present` kontrol script'i olmayan bir projede testleri **sessizce atlayabilirdi**.
+- **Düzeltme:** `lint`, `typecheck`, `test`, `test:e2e` ve `build` scriptleri artık zorunlu. Script eksikse kalite kapısı başarısız; E2E Chromium adımı belirlendi. Bu adımlar tam proje olmadığı için henüz çalıştırılamaz.
+- **Önceki/ara kusur:** npm cache kurulumu, eksik lockfile nedeniyle asıl kaynak denetiminden önce hata oluşturabilirdi.
+- **Düzeltme:** `scripts/verify-source.mjs` ilk adım yapıldı; kaynak eksikliği doğru kök neden olarak gösterilecek.
+- **Ek kontrol:** Salt-okunur production smoke GitHub Actions içinde **her gün 08:15 Türkiye saati** için zamanlandı (`05:15 UTC`). GitHub zamanlayıcısında gecikme olabilir; otomatik testler gerçek kullanıcı login/registration doğrulamasının yerine geçmez.
+- Son değişikliklerden sonra `Source, Test and Build` run **39057757656**, eksik kaynak denetiminde beklenen şekilde başarısızdır. `Production Read-Only Smoke` run **39057734192** başarılıdır.
+
+### Önemli sınır
+
+Netlify `ready` hali üretim dosyalarının yayımlandığı anlamına gelir; özgün geliştirilebilir Next.js kaynak kodu, ilgili deploy download dosyalarında her zaman bulunmaz. Mevcut Netlify connector erişimi repoyu doğrudan bağlamayı ya da üretim kaynağının orijinal tamamını indirmeyi desteklemiyor. **GitHub'a tam taşıma ve CD, şu aşamada tamamlanmadı.**
+
