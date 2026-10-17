@@ -37,3 +37,11 @@ Kısmi düzeltme ZIP'i için SHA-256 ve syntax denetimi: [kaynak kurtarma raporu
 Doğrulanmış 17 Ekim kaynak ZIP'inden `app/`, `lib/`, `db/` yollarına **10 gerçek uygulama dosyası**, ayrıca `tests/production-smoke.mjs` aktarıldı. Bu bir **kısmi kurtarmadır**, tam uygulama veya build edilebilir Next.js projesi değildir. Açık eksikler için [kaynak kurtarma denetimi](docs/KAYNAK-KURTARMA-DENETIMI-2026-10-17.md) ve [Issue #1](https://github.com/kanunal99-jpg/Paki-Diyabet/issues/1) izlenir.
 
 **Canlı test kanıtı:** [GitHub Actions run 39056689315](https://github.com/kanunal99-jpg/Paki-Diyabet/actions/runs/39056689315) — **32/32 salt-okunur production smoke geçti.** Gerçek kayıt/giriş E2E ve GitHub→Netlify CD hâlâ bekliyor.
+
+## CI/CD hazırlık denetimi (17 Ekim 2026, 21:30 TRT sonrası)
+
+- [Kaynak bütünlüğü regresyonu](https://github.com/kanunal99-jpg/Paki-Diyabet/actions/runs/39059186763): **4/4 geçti**. Boş repo, eksik kalite scriptleri ve npm uyumsuz lock dosyası production hazırlık denetimini geçemez.
+- Netlify `netlify.toml` şimdi **source gate → lint → typecheck → unit/integration → Next.js build** sırasında herhangi bir hata olursa yayın derlemesini durdurur.
+- Gerçek kaynaklarda `@netlify/database` ve `@netlify/blobs` kullanımı vardır. PostgreSQL başlangıç migration dosyası kısmi ZIP'de olmadığından zorunlu kaynak kontrolüne dahil edildi; üretim verilerine ve schema'ya dokunulmadı.
+- Güncel tam uygulama kalite iş akışı `SOURCE_INCOMPLETE` nedeni ile **başarısızdır (beklenen güvenli engel)**; tam Next.js kaynak projesi ve Netlify native Git bağlantısı **halen yok**.
+- Resmi Netlify kaynak kurtarma seçeneği: [Push to new repository](https://docs.netlify.com/build/git-workflows/create-a-repo-from-netlify/). Arayüzde mevcutsa *geçici bir yeni depo* oluşturur; içeriği doğrulandıktan sonra bu **mevcut Paki-Diyabet deposuna** taşınmalıdır. Bu adım henüz kullanıcı hesabında uygulanmadı.
