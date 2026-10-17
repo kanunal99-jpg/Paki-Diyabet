@@ -46,3 +46,17 @@
 5. `main` commit SHA'sı Netlify deploy kaydında görünmeli; yeni production deploy `ready` + HTTP smoke ve rollback doğrulaması yapılmalı.
 
 **NOT:** “Şimdiye kadar tamamlananlar” anayasa, kılavuz, GitHub güvenli kalite kapıları ve bu denetimdir. “Tam transfer” ve “Netlify otomatik yayın” henüz tamamlanmamıştır.
+
+## Canlı smoke doğrulaması — aynı gün ek çalışma
+
+**GitHub Actions run:** https://github.com/kanunal99-jpg/Paki-Diyabet/actions/runs/39056689315  
+**Job:** `live-smoke` (117465984331) — **success**.
+
+Kısmi ZIP'deki `tests/production-smoke.mjs` dosyası depoya güvenli salt-okunur test olarak taşındı; `.github/workflows/production-smoke.yml` ile canlı ortamdan bağımsız GitHub Actions testi yapıldı. GitHub iş günlüğü **32 başarılı / 0 başarısız** kontrol gösterdi:
+
+- Ana sayfa, giriş/kayıt ekranı, çıkış ekranı ve Netlify Identity sağlayıcı ayarları: HTTP 200.
+- `/api/status` veritabanı sağlık yanıtı: HTTP 200, JSON `ok: true`.
+- Anonim kayıtlar, günlük, dosyalar, yedekleme ve paylaşım API'leri: HTTP 401; sahte kullanıcı başlığı/bozuk JWT yetki sağlamadı.
+- Manifest, service worker, çevrimdışı sayfa, ikon ve Next.js CSS/JS dosyaları: HTTP 200.
+
+**Sınır:** Gerçek e-posta onayı, hesap oluşturma, kimlik sağlayıcıdan gerçek JWT edinme, kullanıcıya ait veri güncelleme ve veri kalıcılığı bu salt-okunur testte denenmedi. CI kaynak bütünlüğü/gerçek üretim build hâlâ eksik kaynak nedeniyle başarısız; Netlify'nin GitHub'a otomatik bağlı olduğunu bu smoke kanıtlamaz.
