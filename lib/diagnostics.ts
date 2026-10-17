@@ -73,7 +73,7 @@ export function errorFacts(error:unknown){
   timeout||=e.name==='TimeoutError';network||=e.name==='AbortError';queue.push(e.cause,e.json);
  }
  const message=messages.join(' ');timeout||=/timed? out|timeout/i.test(message)||codes.some(c=>['ETIMEDOUT','UND_ERR_CONNECT_TIMEOUT','UND_ERR_HEADERS_TIMEOUT'].includes(c));
- network||=timeout||=/failed to fetch|networkerror|network request failed|load failed|network unavailable|provider offline|^offline$/i.test(message)||codes.some(c=>['ECONNREFUSED','ECONNRESET','ENOTFOUND','EAI_AGAIN','UND_ERR_SOCKET'].includes(c));
+ network||=timeout||/failed to fetch|networkerror|network request failed|load failed|network unavailable|provider offline|^offline$/i.test(message)||codes.some(c=>['ECONNREFUSED','ECONNRESET','ENOTFOUND','EAI_AGAIN','UND_ERR_SOCKET'].includes(c));
  return {status,message,codes,timeout,network};
 }
 export function dependencyCode(error:unknown,dependency:'database'|'file'|'external'):DiagnosticCode{
