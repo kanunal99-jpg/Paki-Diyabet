@@ -10,26 +10,49 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: source-gate-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality-gate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+          cache-dependency-path: package-lock.json
       - name: Verify complete original application source
         run: node scripts/verify-source.mjs
-      - name: Install locked dependencies
+      - name: Require explicit quality scripts (never silently skip)
+        run: |
+          node -e "const p=require('./package.json');const required=['build','lint','typecheck','test','test:e2e'];const missing=required.filter(x=>!p.scripts?.[x]);if(missing.length){console.error('QUALITY_SCRIPTS_MISSING:',missing.join(','));process.exit(1)}"
+      - name: Install exact locked dependencies
         run: npm ci
       - name: Lint
-        run: npm run lint --if-present
+        run: npm run lint
       - name: Typecheck
-        run: npm run typecheck --if-present
+        run: npm run typecheck
       - name: Unit and integration tests
-        run: npm test --if-present
+        run: npm test
       - name: Production build
         run: npm run build
-# E2E and production smoke must be integrated when the full project and fixtures are restored.
-# A passing build is not equivalent to a real login/register verification.
+      - name: Install Chromium test browser
+        run: npx playwright install --with-deps chromium
+      - name: E2E login, registration, session and isolation
+        run: npm run test:e2e
+      - name: Upload E2E evidence if available
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-evidence
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
+# This intentionally fails on the current partial source checkout. Do not
+# weaken checks, claim a green build, or link the incomplete repo to production.
