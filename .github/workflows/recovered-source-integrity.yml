@@ -1,0 +1,33 @@
+name: Recovered Source Integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'lib/**'
+      - 'tests/recovered-source-hashes.test.mjs'
+      - '.github/workflows/recovered-source-integrity.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'lib/**'
+      - 'tests/recovered-source-hashes.test.mjs'
+      - '.github/workflows/recovered-source-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-recovered-files:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact original source fingerprints
+        run: node --test tests/recovered-source-hashes.test.mjs
