@@ -34,7 +34,7 @@ Kısmi düzeltme ZIP'i için SHA-256 ve syntax denetimi: [kaynak kurtarma raporu
 
 ## Kısmi kaynak kurtarma ve gerçek test ilerlemesi
 
-Doğrulanmış 17 Ekim kaynak ZIP'inden `app/`, `lib/`, `db/` yollarına **10 gerçek uygulama dosyası**, ayrıca `tests/production-smoke.mjs` aktarıldı. Bu bir **kısmi kurtarmadır**, tam uygulama veya build edilebilir Next.js projesi değildir. Açık eksikler için [kaynak kurtarma denetimi](docs/KAYNAK-KURTARMA-DENETIMI-2026-10-17.md) ve [Issue #1](https://github.com/kanunal99-jpg/Paki-Diyabet/issues/1) izlenir.
+Doğrulanmış 17 Ekim kaynak ZIP'inden `app/`, `lib/`, `db/` yollarına **24 gerçek uygulama dosyası**, ayrıca kaynak ZIP'den bazı test dosyaları aktarıldı. Bu bir **kısmi kurtarmadır**, tam uygulama veya build edilebilir Next.js projesi değildir. Açık eksikler için [kaynak kurtarma denetimi](docs/KAYNAK-KURTARMA-DENETIMI-2026-10-17.md) ve [Issue #1](https://github.com/kanunal99-jpg/Paki-Diyabet/issues/1) izlenir.
 
 **Canlı test kanıtı:** [GitHub Actions run 39056689315](https://github.com/kanunal99-jpg/Paki-Diyabet/actions/runs/39056689315) — **32/32 salt-okunur production smoke geçti.** Gerçek kayıt/giriş E2E ve GitHub→Netlify CD hâlâ bekliyor.
 
@@ -45,3 +45,12 @@ Doğrulanmış 17 Ekim kaynak ZIP'inden `app/`, `lib/`, `db/` yollarına **10 ge
 - Gerçek kaynaklarda `@netlify/database` ve `@netlify/blobs` kullanımı vardır. PostgreSQL başlangıç migration dosyası kısmi ZIP'de olmadığından zorunlu kaynak kontrolüne dahil edildi; üretim verilerine ve schema'ya dokunulmadı.
 - Güncel tam uygulama kalite iş akışı `SOURCE_INCOMPLETE` nedeni ile **başarısızdır (beklenen güvenli engel)**; tam Next.js kaynak projesi ve Netlify native Git bağlantısı **halen yok**.
 - Resmi Netlify kaynak kurtarma seçeneği: [Push to new repository](https://docs.netlify.com/build/git-workflows/create-a-repo-from-netlify/). Arayüzde mevcutsa *geçici bir yeni depo* oluşturur; içeriği doğrulandıktan sonra bu **mevcut Paki-Diyabet deposuna** taşınmalıdır. Bu adım henüz kullanıcı hesabında uygulanmadı.
+
+## Kaynak kurtarma — yeni doğrulama (17 Ekim, sonraki çalışma)
+
+- GitHub `main` altında **40 dosya**; kaynak ZIP'deki `app/`, `lib/`, `db/` altından **24 gerçek kod dosyası** mevcut.
+- Bu çalışmada **11 gerçek kaynak dosyası** SHA/Git blob düzeyinde *orijinal ZIP ile birebir eşleşti*. İçinde asıl `app/auth-client.tsx`, `app/chatgpt-auth.ts`, `lib/diagnostics.ts`, hata tanılama merkezi ve dört API route bulunmaktadır.
+- İlk aktarımda `lib/diagnostics.ts` dosyasında bir karakter farkı tespit edilip düzeltildi. Güncel Git blob SHA'sı özgün dosyayla birebir aynı.
+- [Recovered Source Integrity — GitHub Actions](https://github.com/kanunal99-jpg/Paki-Diyabet/actions/runs/39062897825) **11/11 test başarılı**. Bu test kaynak sadakatini doğrular; **Next.js uygulamasının build edilebilir olduğunu veya otomatik deployment'ın açık olduğunu kanıtlamaz**.
+- Kullanıcının Netlify ekranında `Current repository: Not linked` görüldü. Netlify'nin `Link your project` son ekranındaki `Deploy Paki-Diyabet` düğmesine basılmadı; eksik kaynakla yayına geçilmedi.
+- Eksik kaynaklar halen `package.json`, `package-lock.json`, `app/page.tsx`, özgün PostgreSQL migration, özgün `lib/backup`, `lib/health` ve diğer orijinal modüllerdir. Tam kaynak ZIP veya Netlify'nin **Push to new repository** özelliğiyle geri kazanılmış tam Git deposu gereklidir.
