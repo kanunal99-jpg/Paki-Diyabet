@@ -1,0 +1,35 @@
+name: Source, Test and Build
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify complete original application source
+        run: node scripts/verify-source.mjs
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint --if-present
+      - name: Typecheck
+        run: npm run typecheck --if-present
+      - name: Unit and integration tests
+        run: npm test --if-present
+      - name: Production build
+        run: npm run build
+# E2E and production smoke must be integrated when the full project and fixtures are restored.
+# A passing build is not equivalent to a real login/register verification.
