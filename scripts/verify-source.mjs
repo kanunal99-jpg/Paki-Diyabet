@@ -16,6 +16,7 @@ const requirements = [
   ]],
   ['TypeScript configuration', ['tsconfig.json']],
   ['database interface', ['db/raw.ts','db/raw.js']],
+  ['baseline PostgreSQL migration', ['netlify/database/migrations/001_initial-schema/migration.sql']],
   ['auth handler', ['app/chatgpt-auth.ts','app/chatgpt-auth.js']],
   ['authenticated API session', ['app/api/session/route.ts','app/api/session/route.js']],
   ['session reconciliation', ['app/session-reconciler.ts','app/session-reconciler.tsx','app/session-reconciler.js']],
