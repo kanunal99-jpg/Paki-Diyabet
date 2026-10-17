@@ -1,0 +1,33 @@
+name: Source Gate Regression
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/verify-source.mjs
+      - tests/source-gate.test.mjs
+      - .github/workflows/source-gate-regression.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/verify-source.mjs
+      - tests/source-gate.test.mjs
+      - .github/workflows/source-gate-regression.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-gate-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Gate source syntax check
+        run: node --check scripts/verify-source.mjs
+      - name: Gate regression tests (synthetic and no secrets)
+        run: node --test tests/source-gate.test.mjs
