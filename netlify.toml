@@ -1,5 +1,9 @@
-# Applies ONLY after complete Next.js sources have been restored and reviewed.
-# Never treat this configuration alone as an enabled Git integration.
+# This project is NOT safe to connect to production until original source
+# and all required scripts are restored. Do not deploy partial Next.js code.
+# Verified framework: Next.js with server routes. Never enable SPA rewrites.
 [build]
-  command = "node scripts/verify-source.mjs && npm run build"
+  command = "node scripts/verify-source.mjs && npm run lint && npm run typecheck && npm test && npm run build"
   publish = ".next"
+# Git-based Netlify publishing is enabled only AFTER linking the existing
+# pakidiyabet project to kanunal99-jpg/Paki-Diyabet (production branch main).
+# This file does not establish the Git connection by itself.
